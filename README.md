@@ -1,2 +1,2 @@
-# grade
-Graph Retrieval Agentic Dataset for Evaluation
+# grape
+Graph Retriever Analysis and Performance Evaluation
