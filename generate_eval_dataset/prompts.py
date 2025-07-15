@@ -1,7 +1,7 @@
 system_prompt = """
 # Text2Cypher Dataset Generation System Prompt
 
-You are a synthetic dataset generator for text2cypher evaluation. Your task is to create **24 question-answer pairs** where questions are in natural language and answers are Cypher queries that return **single values only** (not result sets).
+You are a synthetic dataset generator for text2cypher evaluation. Your task is to create **50 question-answer pairs** where questions are in natural language and answers are Cypher queries that return **single values only** (not result sets).
 
 ## Input Format
 You will receive:
@@ -183,14 +183,14 @@ LIMIT 1
 
 ## Output Requirements
 
-Generate exactly **24 question-answer pairs** based on the provided schema and sample paths. **Use creative freedom to vary question phrasing, structure, and vocabulary while maintaining the required distribution and domain appropriateness.**
+Generate exactly **50 question-answer pairs** based on the provided schema and sample paths. **Use creative freedom to vary question phrasing, structure, and vocabulary while maintaining the required distribution and domain appropriateness.**
 
 **Distribution Guidelines (Flexible Based on Domain):**
 - **Target Distribution**: Aim for roughly equal distribution across query types:
-  - ~6 Aggregation queries (COUNT, SUM, AVG, MAX, MIN)
-  - ~6 Property Retrieval queries (single property access)
-  - ~6 Sorting queries (MAX/MIN with ORDER BY)
-  - ~6 Existence Verification queries (path counts, shortest paths, connecting entities)
+  - ~12-13 Aggregation queries (COUNT, SUM, AVG, MAX, MIN)
+  - ~12-13 Property Retrieval queries (single property access)
+  - ~12-13 Sorting queries (MAX/MIN with ORDER BY)
+  - ~12-13 Existence Verification queries (path counts, shortest paths, connecting entities)
 
 - **Domain-Driven Flexibility**: **Do NOT force weird or non-semantic questions just to achieve exact distributions.** If the domain or graph schema isn't ideal for certain query types, produce more of those which make natural sense for users of this data/platform. For example:
   - Movie databases naturally lend themselves to aggregation queries about collaboration patterns
@@ -198,7 +198,7 @@ Generate exactly **24 question-answer pairs** based on the provided schema and s
   - Business networks may have more property retrieval queries about company metrics
   - Academic citation networks favor aggregation and sorting queries
 
-- **Quality Over Rigid Distribution**: Prioritize creating realistic, meaningful questions that actual users would ask over maintaining exact 6-6-6-6 distribution. A distribution like 8-4-7-5 is perfectly acceptable if it results in more natural, semantically meaningful questions.
+- **Quality Over Rigid Distribution**: Prioritize creating realistic, meaningful questions that actual users would ask over maintaining exact 12-13-12-13 distribution. A distribution like 15-10-14-11 is perfectly acceptable if it results in more natural, semantically meaningful questions.
 
 **Creative Guidelines:**
 - **Vary question structure**: Mix interrogative, declarative, and imperative forms
@@ -208,7 +208,7 @@ Generate exactly **24 question-answer pairs** based on the provided schema and s
 - **Add contextual phrases**: "In [entity]'s network...", "Among [entity_type] connected to...", "Through [relationship] relationships..."
 
 **Noise Injection (40% of questions):**
-Apply to exactly 10 questions (spread across different query types):
+Apply to exactly 20 questions (spread across different query types):
 - **Typos in named entities**: Minor misspellings of person/movie/company names:
   - "Tom Hanks" → "Tom Henks" 
   - "Georges Méliès" → "George Melies"
@@ -263,7 +263,7 @@ Count each relationship traversal (both `-[:REL]->` and `<-[:REL]-`) as one hop,
 
 ## Output Format
 
-First, provide your analysis and reasoning in `<reasoning>` tags, then return exactly 24 JSON objects in the specified format.
+First, provide your analysis and reasoning in `<reasoning>` tags, then return exactly 50 JSON objects in the specified format.
 
 <reasoning>
 [Explain your analysis of the provided schema and sample paths, your approach to generating domain-appropriate questions, the distribution of query types you chose, and any specific considerations for the domain. Include your reasoning for entity selection, path complexity, and noise injection choices.]
@@ -358,7 +358,7 @@ If the provided data isn't related to the question, answer 'UNKOWN'. """
 simple_system_prompt = """
 # Text2Cypher Dataset Generation System Prompt
 
-You are a synthetic dataset generator for text2cypher evaluation. Your task is to create **24 question-answer pairs** where questions are in natural language and answers are Cypher queries that return **single values only** (not result sets).
+You are a synthetic dataset generator for text2cypher evaluation. Your task is to create **50 question-answer pairs** where questions are in natural language and answers are Cypher queries that return **single values only** (not result sets).
 
 ## Input Format
 You will receive:
@@ -538,13 +538,13 @@ LIMIT 1
 
 ## Output Requirements
 
-Generate exactly **24 question-answer pairs** based on the provided schema and sample paths. **Use creative freedom to vary question phrasing, structure, and vocabulary while maintaining the required distribution and domain appropriateness.**
+Generate exactly **50 question-answer pairs** based on the provided schema and sample paths. **Use creative freedom to vary question phrasing, structure, and vocabulary while maintaining the required distribution and domain appropriateness.**
 
 **Distribution Guidelines (Flexible Based on Domain):**
 - **Target Distribution**: Aim for roughly equal distribution across complexity levels:
-  - ~8 Direct Property Access queries (0 hops - simple property lookups)
-  - ~8 Single-hop queries (1 relationship traversal)
-  - ~8 Two-hop queries (2 relationship traversals)
+  - ~17 Direct Property Access queries (0 hops - simple property lookups)
+  - ~17 Single-hop queries (1 relationship traversal)
+  - ~16 Two-hop queries (2 relationship traversals)
 
 - **Query Type Breakdown Within Each Complexity Level:**
   - **Direct Property Access**: Simple property retrieval, basic node attributes
@@ -557,7 +557,7 @@ Generate exactly **24 question-answer pairs** based on the provided schema and s
   - Business networks may have more two-hop queries about company locations and industries
   - Academic citation networks favor aggregation queries about publications
 
-- **Quality Over Rigid Distribution**: Prioritize creating realistic, meaningful questions that actual users would ask over maintaining exact 8-8-8 distribution. A distribution like 10-6-8 is perfectly acceptable if it results in more natural, semantically meaningful questions.
+- **Quality Over Rigid Distribution**: Prioritize creating realistic, meaningful questions that actual users would ask over maintaining exact 17-17-16 distribution. A distribution like 20-15-15 or 15-20-15 is perfectly acceptable if it results in more natural, semantically meaningful questions.
 
 **Creative Guidelines:**
 - **Vary question structure**: Mix interrogative, declarative, and imperative forms
@@ -567,7 +567,7 @@ Generate exactly **24 question-answer pairs** based on the provided schema and s
 - **Add contextual phrases**: "For [entity]...", "About [entity]...", "Regarding [entity]..."
 
 **Noise Injection (40% of questions):**
-Apply to exactly 10 questions (spread across different complexity levels):
+Apply to exactly 20 questions (spread across different complexity levels):
 - **Typos in named entities**: Minor misspellings of person/movie/company names:
   - "Tom Hanks" → "Tom Henks" 
   - "Georges Méliès" → "George Melies"
@@ -604,7 +604,7 @@ Apply to exactly 10 questions (spread across different complexity levels):
 
 ## Output Format
 
-First, provide your analysis and reasoning in `<reasoning>` tags, then return exactly 24 JSON objects in the specified format.
+First, provide your analysis and reasoning in `<reasoning>` tags, then return exactly 50 JSON objects in the specified format.
 
 <reasoning>
 [Explain your analysis of the provided schema and sample paths, your approach to generating domain-appropriate questions across different complexity levels (0-2 hops), the distribution of query types you chose, and any specific considerations for the domain. Include your reasoning for entity selection, complexity distribution, and noise injection choices. Focus on how you ensured questions represent common, realistic user queries.]

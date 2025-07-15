@@ -1,6 +1,7 @@
 import asyncio
-
 import json
+
+import json_repair
 import re
 from datetime import datetime
 
@@ -9,6 +10,8 @@ from tqdm import tqdm
 from langchain_anthropic import ChatAnthropic
 from langchain_neo4j import Neo4jGraph
 from CyVer import SchemaValidator
+
+from typing import Any
 
 from prompts import (
     system_prompt,
@@ -81,13 +84,13 @@ def extract_json_from_markdown(text: str):
     if match:
         json_str = match.group(1)
         try:
-            return json.loads(json_str)
+            return json_repair.loads(json_str)
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
             return None
     else:
         try:
-            return json.loads(text)
+            return json_repair.loads(text)
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
     return None
@@ -154,7 +157,7 @@ def create_graph_connection(credential: str, db_url: str) -> Neo4jGraph:
     )
 
 
-def generate_qa_pairs(graph: Neo4jGraph, model: ChatAnthropic) -> list:
+def generate_qa_pairs(graph: Neo4jGraph, model: ChatAnthropic, system_prompt: str) -> list:
     """Generate question-answer pairs using the LLM and graph data."""
     paths = _value_sanitize(graph.query(sampling_query))
     messages = [
@@ -189,8 +192,9 @@ def validate_and_execute_record(record: dict, schema_validator: SchemaValidator,
     return record
 
 
-def process_database(credential: str, db_url: str, model: ChatAnthropic, 
-                    iterations_per_database: int) -> list:
+def process_database(credential: str, db_url: str, model: Any, 
+                    iterations_per_database: int,
+                    system_prompt: str = system_prompt) -> list:
     """Process a single database and return all generated records."""
     graph = create_graph_connection(credential, db_url)
     schema_validator = SchemaValidator(graph._driver)
@@ -201,15 +205,17 @@ def process_database(credential: str, db_url: str, model: ChatAnthropic,
                   leave=False):
         try:
             # Generate QA pairs
-            data = generate_qa_pairs(graph, model)
-            
+            data = generate_qa_pairs(graph, model, system_prompt)
             # Validate and execute each record
             for record in data:
+                # Add model name
+                record["model"] = model._llm_type
                 validated_record = validate_and_execute_record(
                     record, schema_validator, graph, credential
                 )
                 database_output.append(validated_record)
         except:
+            raise
             continue
     
     return database_output
