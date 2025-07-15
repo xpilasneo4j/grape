@@ -5,6 +5,9 @@ import json_repair
 import re
 from datetime import datetime
 
+import pandas as pd
+import neo4j
+
 from tqdm.asyncio import tqdm_asyncio
 from tqdm import tqdm
 from langchain_anthropic import ChatAnthropic
@@ -21,7 +24,7 @@ from prompts import (
 )
 
 def convert_datetime(obj):
-    if isinstance(obj, (pd.Timestamp, datetime)):
+    if isinstance(obj, (pd.Timestamp, datetime, neo4j.time.DateTime)):
         return obj.isoformat()
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
