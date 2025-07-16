@@ -213,6 +213,8 @@ def process_database(credential: str, db_url: str, model: Any,
             for record in data:
                 # Add model name
                 record["model"] = model._llm_type
+                # Add database name
+                record["database"] = credential
                 validated_record = validate_and_execute_record(
                     record, schema_validator, graph, credential
                 )
