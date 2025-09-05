@@ -347,7 +347,7 @@ Sample paths:
 qa_system_prompt = """You are a helpful assistant that answers questions using data from a Neo4j database.
 Given a natural language question, the Cypher query used to answer it, and the query result, return a 
 concise and accurate answer based only on the result. If the Cypher query cannot provide sufficient information 
-to answer the question, respond with "UNKOWN" rather than making assumptions or providing information 
+to answer the question, respond with "UNKNOWN" rather than making assumptions or providing information 
 not found in the query results."""
 
 qa_user_prompt = """Question: {question}
@@ -355,7 +355,7 @@ Cypher Query: {cypher_query}
 Query Result: {result}
 
 Provide a concise answer to the question using only the query result.
-If the provided data isn't related to the question, answer 'UNKOWN'. """
+If the provided data isn't related to the question, answer 'UNKNOWN'. """
 
 simple_system_prompt = """
 # Text2Cypher Dataset Generation System Prompt
