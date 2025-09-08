@@ -17,10 +17,9 @@ We use LLMs to generate:
 * 
 ### env file Structure
 
-* LLM_CREATES, list of models to be used. Defined as a list of tring pairs ["LLM Type", "Model Name", "API key"]
-* LLM_QA, LLM used for validating. Can be GOOGLE or CLAUDE
-* LLM_QA_MODEL, Model used for validating. Has to be a model available on the LLM provided in LLM_QA
-* LLM_QA_API_KEY, api key used for this LLM
-* DATABASES, list of databases used for the Q&A generation. Defined as a list of String quadruplet ["db name", "login", "pwd", "uri"]
+* LLM_CREATE_QUESTIONS, list of LLMs to be used to generate questions. Defined as a list of LLM description following the pattern {model_provider}:{model} based on [Langchain](https://python.langchain.com/api_reference/langchain/chat_models/langchain.chat_models.base.init_chat_model.html)
+* LLM_CREATE_ANSWERS, LLM used for creating the answers. Defined as a LLM description following the pattern {model_provider}:{model} based on [Langchain](https://python.langchain.com/api_reference/langchain/chat_models/langchain.chat_models.base.init_chat_model.html)
+* xxx_API_KEY, API key used for this LLM
+* DATABASES, list of databases used for the Q&A generation. Defined as a list of dictionary ["uri", "username", "password", "database (optional, default is neo4j)"]
 
 The generated dataset is used to evaluate how well MCP-compatible servers support agent-based querying over real-world knowledge graphs.

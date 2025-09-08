@@ -198,8 +198,11 @@ def process_database(database: list, model: Any,
                     iterations_per_database: int,
                     system_prompt: str = system_prompt) -> list:
     """Process a single database and return all generated records."""
-    database_name = database[0]
-    graph = create_graph_connection(database_name, database[1], database[2], database[3])
+    if 'database' not in database:
+        database_name = 'neo4j'
+    else:
+        database_name = database['database']
+    graph = create_graph_connection(database_name, database['username'], database['password'], database['uri'])
     schema_validator = SchemaValidator(graph._driver)
     database_output = []
     
